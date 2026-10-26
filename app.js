@@ -79,7 +79,9 @@ const projects = [
     gallery: [
       "./assets/projects/silex-1.png",
       "./assets/projects/silex-2.png",
-      "./assets/projects/silex-3.png"
+      "./assets/projects/silex-3.png",
+      "./assets/projects/silex-4.png",
+      "./assets/projects/silex-5.png"
     ]
   }
 ];
