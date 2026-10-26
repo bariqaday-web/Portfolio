@@ -258,3 +258,12 @@ h2 { font-size: clamp(37px, 4vw, 58px); line-height: 1.07; letter-spacing: -.07e
 .project-image-wrap:has(img.image-failed) .image-fallback { display: flex; }
 .project-image-wrap:has(img.image-failed) { background: #e7e4fa; }
 .project-image-wrap:has(img.image-failed) .phone-ui { transform: scale(.82); }
+
+.project-video-wrap { width: 100%; height: 100%; position: relative; overflow: hidden; background: #17233d; }
+.project-video-wrap video { width: 100%; height: 100%; display: block; object-fit: cover; }
+.video-fallback { display: none; width: 100%; height: 100%; object-fit: cover; }
+.project-video-wrap:has(video.video-failed) video { display: none; }
+.project-video-wrap:has(video.video-failed) .video-fallback { display: block; }
+.modal-media-stack { width: 100%; height: 100%; display: grid; grid-template-rows: minmax(120px, .9fr) minmax(120px, 1.1fr); gap: 10px; padding: 10px; }
+.modal-media-stack .project-video-wrap { min-height: 0; border-radius: 10px; }
+.modal-media-stack .modal-gallery { min-height: 0; padding: 0; }

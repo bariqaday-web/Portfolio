@@ -76,6 +76,7 @@ const projects = [
     status: "غير منشور · نسخة خاصة",
     visual: "phone",
     image: "./assets/projects/silex-1.png",
+    video: "./assets/projects/silex-demo.mp4",
     gallery: [
       "./assets/projects/silex-1.png",
       "./assets/projects/silex-2.png",
@@ -99,6 +100,11 @@ function imageMarkup(project, modalView = false) {
   return `<div class="project-image-wrap"><img src="${project.image}" alt="معاينة واجهة ${project.title}" loading="${modalView ? "eager" : "lazy"}" onerror="this.classList.add('image-failed')" /><div class="image-fallback">${visualMarkup(project.visual)}</div></div>`;
 }
 
+function videoMarkup(project) {
+  const poster = project.image || "";
+  return `<div class="project-video-wrap"><video controls playsinline preload="metadata" poster="${poster}" onerror="this.classList.add('video-failed')"><source src="${project.video}" type="video/mp4" /></video><img class="video-fallback" src="${poster}" alt="معاينة واجهة ${project.title}" /></div>`;
+}
+
 function renderCounts() {
   document.querySelectorAll("[data-count]").forEach((element) => {
     const category = element.dataset.count;
@@ -113,7 +119,7 @@ function renderProjects(filter = "all") {
   grid.innerHTML = visible.map((project) => `
     <article class="project-card ${project.link ? "is-live" : "is-unpublished"}" data-id="${project.id}" tabindex="0" aria-label="فتح تفاصيل ${project.title}">
       <div class="project-visual ${project.image ? "has-project-image" : ""}">
-        ${project.image ? imageMarkup(project) : visualMarkup(project.visual)}
+        ${project.video ? videoMarkup(project) : project.image ? imageMarkup(project) : visualMarkup(project.visual)}
         <div class="card-badges"><span class="category-badge">${project.categoryLabel}</span><span class="status-badge ${project.link ? "live" : "pending"}"><i></i>${project.link ? "نسخة حية" : (project.status || "غير منشور")}</span></div>
       </div>
       <div class="project-info">
@@ -132,11 +138,12 @@ function renderProjects(filter = "all") {
     });
     card.querySelector(".card-detail")?.addEventListener("click", (event) => { event.stopPropagation(); openModal(card.dataset.id); });
     card.querySelector(".card-live")?.addEventListener("click", (event) => event.stopPropagation());
+    card.querySelector("video")?.addEventListener("click", (event) => event.stopPropagation());
   });
 }
 
 function modalVisual(project) {
-  return project.image ? imageMarkup(project, true) : visualMarkup(project.visual);
+  return project.video ? videoMarkup(project) : project.image ? imageMarkup(project, true) : visualMarkup(project.visual);
 }
 
 function galleryMarkup(project, sources) {
@@ -179,7 +186,7 @@ function openModal(id) {
   if (project.gallery) availableGallery(project).then((sources) => {
     if (!modal.classList.contains("open")) return;
     if (sources.length) {
-      document.querySelector("#modal-visual").innerHTML = galleryMarkup(project, sources);
+      document.querySelector("#modal-visual").innerHTML = project.video ? `<div class="modal-media-stack">${videoMarkup(project)}${galleryMarkup(project, sources)}</div>` : galleryMarkup(project, sources);
       bindGallery(project, sources);
     }
   });
