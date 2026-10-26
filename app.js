@@ -57,11 +57,11 @@ const projects = [
   {
     id: "novasync-live",
     title: "NovaSync",
-    shortTitle: "تجربة تطبيق إنتاجية مع مزامنة ذكية",
-    description: "واجهة منتج إنتاجية تعرض مزامنة المهام والملاحظات، رؤى الذكاء الاصطناعي، العمل دون اتصال، التشفير، ووصول التطبيق على iOS وAndroid.",
-    category: "mobile",
-    categoryLabel: "تطبيقات",
-    tags: ["Mobile product", "Offline mode", "AI insights"],
+    shortTitle: "موقع ترويجي لمنتج وتطبيق إنتاجية",
+    description: "موقع Landing Page ترويجي لمفهوم NovaSync، يعرض فكرة المنتج ومزامنة المهام والملاحظات ورؤى الذكاء الاصطناعي ومزايا العمل دون اتصال، وليس تطبيقًا مستقلًا منشورًا.",
+    category: "landing",
+    categoryLabel: "Landing Pages",
+    tags: ["Product website", "SaaS UI", "Responsive"],
     image: "./assets/projects/novasync.png",
     link: "https://bariqaday-web.github.io/NovaSync/"
   },
