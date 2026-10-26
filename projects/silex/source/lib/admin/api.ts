@@ -1,0 +1,291 @@
+import { createClient } from '@/lib/supabase'
+import type {
+  AuditLog,
+  Campaign,
+  Conversation,
+  Notification,
+  Order,
+  PlatformSetting,
+  PlatformSettingKey,
+  Product,
+  Profile,
+  Report,
+} from './types'
+
+export const PAGE_SIZE = 25
+
+export type WithCity<T> = T & { city: string | null }
+export type Page<T> = { rows: T[]; total: number }
+export type ListOpts = { page?: number; search?: string }
+
+const supabase = createClient()
+
+async function attachCity<T extends Record<string, any>>(
+  rows: T[],
+  key: string,
+): Promise<WithCity<T>[]> {
+  const ids = Array.from(new Set(rows.map((r) => r[key]).filter(Boolean))) as string[]
+  if (!ids.length) return rows.map((r) => ({ ...r, city: null }))
+  const { data } = await supabase.from('profiles').select('id, city').in('id', ids)
+  const map = new Map((data ?? []).map((p: any) => [p.id, p.city as string | null]))
+  return rows.map((r) => ({ ...r, city: map.get(r[key]) ?? null }))
+}
+
+async function list<T>(
+  table: string,
+  { page = 0 }: ListOpts = {},
+  build?: (q: any) => any,
+): Promise<Page<T>> {
+  let q = supabase.from(table).select('*', { count: 'exact' })
+  if (build) q = build(q)
+  const from = page * PAGE_SIZE
+  const { data, count, error } = await q
+    .order('created_at', { ascending: false })
+    .range(from, from + PAGE_SIZE - 1)
+  if (error) throw new Error(error.message)
+  return { rows: (data ?? []) as T[], total: count ?? 0 }
+}
+
+async function listWithCity<T extends Record<string, any>>(
+  table: string,
+  ownerKey: string,
+  o: ListOpts = {},
+  build?: (q: any) => any,
+): Promise<Page<WithCity<T>>> {
+  const res = await list<T>(table, o, build)
+  return { rows: await attachCity(res.rows, ownerKey), total: res.total }
+}
+
+const clean = (s: string) => s.replace(/[,()%]/g, ' ').trim()
+
+function profileSearch(q: any, search?: string) {
+  const s = search ? clean(search) : ''
+  if (!s) return q
+  return q.or(
+    `full_name.ilike.%${s}%,display_name.ilike.%${s}%,store_name.ilike.%${s}%,phone.ilike.%${s}%,city.ilike.%${s}%`,
+  )
+}
+
+export const listUsers = (o: ListOpts = {}) =>
+  list<Profile>('admin_profiles', o, (q) => profileSearch(q, o.search))
+
+export const listMerchants = (o: ListOpts = {}) =>
+  list<Profile>('admin_profiles', o, (q) => profileSearch(q.eq('role', 'merchant'), o.search))
+
+export const listAdmins = (o: ListOpts = {}) =>
+  list<Profile>('admin_profiles', o, (q) => q.eq('role', 'admin'))
+
+export const listProducts = (o: ListOpts = {}) =>
+  listWithCity<Product>('products', 'merchant_id', o, (q) => {
+    const s = o.search ? clean(o.search) : ''
+    return s ? q.ilike('title', `%${s}%`) : q
+  })
+
+export const listOrders = (o: ListOpts = {}) =>
+  listWithCity<Order>('orders', 'customer_id', o)
+export const listReports = (o: ListOpts = {}) =>
+  listWithCity<Report>('reports', 'reported_id', o)
+export const listConversations = (o: ListOpts = {}) =>
+  listWithCity<Conversation>('conversations', 'customer_id', o)
+export const listNotifications = (o: ListOpts = {}) =>
+  listWithCity<Notification>('notifications', 'user_id', o, (q) => {
+    const s = o.search ? clean(o.search) : ''
+    return s ? q.or(`title.ilike.%${s}%,body.ilike.%${s}%,type.ilike.%${s}%`) : q
+  })
+export const listCampaigns = (o: ListOpts = {}) =>
+  listWithCity<Campaign>('campaigns', 'merchant_id', o)
+export const listAuditLogs = (o: ListOpts = {}) => list<AuditLog>('audit_logs', o)
+
+export type UsageHour = {
+  active_date: string
+  active_hour: number
+  city: string | null
+  country: string | null
+}
+
+export async function getUsageHours(days = 30): Promise<UsageHour[]> {
+  const since = new Date(Date.now() - days * 86_400_000).toISOString().slice(0, 10)
+  const pageSize = 1000
+  const rows: UsageHour[] = []
+  for (let from = 0; ; from += pageSize) {
+    const { data, error } = await supabase
+      .from("app_usage_hours")
+      .select("active_date, active_hour, city, country")
+      .gte("active_date", since)
+      .order("active_date", { ascending: false })
+      .range(from, from + pageSize - 1)
+    if (error) throw new Error(error.message)
+    rows.push(...(data ?? []) as UsageHour[])
+    if (!data || data.length < pageSize) break
+  }
+  return rows
+}
+
+export async function getCounts() {
+  const count = async (table: string, build?: (q: any) => any) => {
+    let q = supabase.from(table).select(table === 'profiles' ? 'id' : '*', { count: 'exact', head: true })
+    if (build) q = build(q)
+    const { count: c, error } = await q
+    if (error) throw new Error(error.message)
+    return c ?? 0
+  }
+  const [users, merchants, products, orders, reports, campaigns] = await Promise.all([
+    count('profiles'),
+    count('profiles', (q) => q.eq('role', 'merchant')),
+    count('products'),
+    count('orders'),
+    count('reports'),
+    count('campaigns'),
+  ])
+  return { users, merchants, products, orders, reports, campaigns }
+}
+
+export async function logAction(
+  action: string,
+  entityType?: string,
+  entityId?: string,
+  details: Record<string, unknown> = {},
+) {
+  const { data } = await supabase.auth.getUser()
+  if (!data.user) return
+  await supabase.from('audit_logs').insert({
+    actor_id: data.user.id,
+    action,
+    entity_type: entityType ?? null,
+    entity_id: entityId ?? null,
+    details,
+  })
+}
+
+export async function getSettings(): Promise<Record<PlatformSettingKey, string>> {
+  const settingKeys: PlatformSettingKey[] = ['support_email', 'support_whatsapp', 'terms_text', 'privacy_text']
+  const { data, error } = await supabase
+    .from('platform_settings')
+    .select('key, value')
+    .in('key', settingKeys)
+  if (error) throw new Error(error.message)
+  const out = {
+    support_email: '',
+    support_whatsapp: '',
+    terms_text: '',
+    privacy_text: '',
+  } as Record<PlatformSettingKey, string>
+  for (const r of (data ?? []) as PlatformSetting[]) out[r.key] = r.value
+  return out
+}
+
+export async function saveSettings(values: Record<PlatformSettingKey, string>) {
+  const { data: u } = await supabase.auth.getUser()
+  const now = new Date().toISOString()
+  const rows = (Object.keys(values) as PlatformSettingKey[]).map((key) => ({
+    key,
+    value: values[key],
+    updated_at: now,
+    updated_by: u.user?.id ?? null,
+  }))
+  const { error } = await supabase.from('platform_settings').upsert(rows)
+  if (error) throw new Error(error.message)
+  await logAction('settings.update', 'platform_settings')
+}
+
+export async function setUserRole(userId: string, role: 'admin' | 'merchant' | 'customer') {
+  const { error } = await supabase.from('profiles').update({ role }).eq('id', userId)
+  if (error) throw new Error(error.message)
+  await logAction('user.role_change', 'profiles', userId, { role })
+}
+
+export const listReportedChats = (o: ListOpts = {}) =>
+  listWithCity<Report>('reports', 'reported_id', o, (q) =>
+    q.not('conversation_id', 'is', null),
+  )
+
+export type ChatMessage = {
+  id: string
+  sender_id: string
+  content: string | null
+  media_type: string | null
+  created_at: string
+  deleted_at: string | null
+}
+
+export async function listMessages(conversationId: string): Promise<ChatMessage[]> {
+  const { data, error } = await supabase
+    .from('messages')
+    .select('id, sender_id, content, media_type, created_at, deleted_at')
+    .eq('conversation_id', conversationId)
+    .order('created_at', { ascending: true })
+    .limit(200)
+  if (error) throw new Error(error.message)
+  return (data ?? []) as ChatMessage[]
+}
+
+export const listCampaignsByStatus = (o: ListOpts = {}, status?: string) =>
+  listWithCity<Campaign>('campaigns', 'merchant_id', o, (q) =>
+    status ? q.eq('status', status) : q,
+  )
+
+export async function setCampaignStatus(id: string, status: 'active' | 'rejected' | 'paused') {
+  const { data, error } = await supabase
+    .from('campaigns')
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select('id')
+  if (error) throw new Error(error.message)
+  if (!data?.length) throw new Error('لم يتم التعديل، تحقق من الصلاحيات')
+  await logAction('campaign.' + status, 'campaigns', id)
+}
+
+export const listReportsByStatus = (o: ListOpts = {}, status?: string) =>
+  listWithCity<Report>('reports', 'reported_id', o, (q) => (status ? q.eq('status', status) : q))
+
+export async function resolveReport(id: string, status: 'resolved' | 'dismissed', note?: string) {
+  const { data: u } = await supabase.auth.getUser()
+  const { data, error } = await supabase
+    .from('reports')
+    .update({
+      status,
+      admin_note: note?.trim() || null,
+      resolved_by: u.user?.id ?? null,
+      resolved_at: new Date().toISOString(),
+    })
+    .eq('id', id)
+    .select('id')
+  if (error) throw new Error(error.message)
+  if (!data?.length) throw new Error('لم يتم التعديل، تحقق من الصلاحيات')
+  await logAction('report.' + status, 'reports', id)
+}
+
+export async function setMerchantVerified(userId: string, verified: boolean) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({ verified_at: verified ? new Date().toISOString() : null })
+    .eq('id', userId)
+    .select('id')
+  if (error) throw new Error(error.message)
+  if (!data?.length) throw new Error('لم يتم التعديل، تحقق من الصلاحيات')
+  await logAction(verified ? 'user.verify' : 'user.unverify', 'profiles', userId)
+}
+
+export async function sendNotification(userId: string, title: string, body: string, type = 'general') {
+  const { error } = await supabase.from('notifications').insert({ user_id: userId, title, body, type })
+  if (error) throw new Error(error.message)
+  await logAction('notification.send', 'profiles', userId)
+}
+
+export async function deletePostByAdmin(postId: string, reportId: string, ownerId: string | null) {
+  const { data, error } = await supabase.from('posts').delete().eq('id', postId).select('id')
+  if (error) throw new Error(error.message)
+  if (!data?.length) throw new Error('لم يتم الحذف، تحقق من الصلاحيات')
+  await logAction('post.delete', 'posts', postId)
+  await resolveReport(reportId, 'resolved', 'تم حذف المنشور')
+  let notified = false
+  if (ownerId) {
+    try {
+      await sendNotification(ownerId, 'تم حذف منشورك', 'تم حذف أحد منشوراتك لمخالفته سياسة المنصة.')
+      notified = true
+    } catch {
+      notified = false
+    }
+  }
+  return { notified }
+}

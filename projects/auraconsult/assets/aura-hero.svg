@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">AuraConsult — Strategic Momentum</title>
+  <desc id="desc">Abstract emerald architectural forms against a midnight navy field, representing disciplined enterprise growth.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#142236"/><stop offset=".56" stop-color="#172b3c"/><stop offset="1" stop-color="#10192a"/></linearGradient>
+    <linearGradient id="stone" x1=".2" y1="0" x2=".8" y2="1"><stop stop-color="#7dc9b8" stop-opacity=".62"/><stop offset=".52" stop-color="#315c60" stop-opacity=".78"/><stop offset="1" stop-color="#203348" stop-opacity=".95"/></linearGradient>
+    <linearGradient id="stone2" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b7a8f2" stop-opacity=".36"/><stop offset=".45" stop-color="#3b5a66" stop-opacity=".82"/><stop offset="1" stop-color="#15283c"/></linearGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c6fff0" stop-opacity=".82"/><stop offset=".45" stop-color="#58d7be" stop-opacity=".65"/><stop offset="1" stop-color="#58d7be" stop-opacity="0"/></linearGradient>
+    <radialGradient id="glow"><stop stop-color="#59d5bf" stop-opacity=".2"/><stop offset="1" stop-color="#59d5bf" stop-opacity="0"/></radialGradient>
+    <pattern id="grid" width="72" height="72" patternUnits="userSpaceOnUse"><path d="M72 0H0v72" fill="none" stroke="#b4cad4" stroke-opacity=".11" stroke-width="1"/></pattern>
+    <filter id="soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="24"/></filter>
+    <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="25" stdDeviation="25" flood-color="#07101c" flood-opacity=".38"/></filter>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <rect width="1280" height="720" fill="url(#grid)" opacity=".58"/>
+  <ellipse cx="785" cy="307" rx="435" ry="315" fill="url(#glow)" filter="url(#soft)"/>
+  <path d="M598 545 764 159l119 95-90 291z" fill="url(#stone)" filter="url(#shadow)"/>
+  <path d="m764 159 164 112-135 274-90-291z" fill="#13263a" fill-opacity=".72"/>
+  <path d="m873 254 162 94-148 218-154-21z" fill="url(#stone2)" filter="url(#shadow)"/>
+  <path d="m926 271 108 77-115 170-40 48z" fill="#8ba8ad" fill-opacity=".14"/>
+  <path d="m602 546 166-387m-75 326 18-159 66-167" fill="none" stroke="url(#beam)" stroke-width="2"/>
+  <path d="m618 548 287 25m-180-414 331 188m-368-65 452 165" fill="none" stroke="#80ecd3" stroke-opacity=".26"/>
+  <ellipse cx="811" cy="334" rx="314" ry="117" transform="rotate(-26 811 334)" fill="none" stroke="#72ddc6" stroke-opacity=".32"/>
+  <ellipse cx="794" cy="347" rx="355" ry="71" transform="rotate(15 794 347)" fill="none" stroke="#b9a8ff" stroke-opacity=".22"/>
+  <circle cx="947" cy="246" r="7" fill="#8bf0d7"/><circle cx="947" cy="246" r="19" fill="#58d7be" fill-opacity=".11"/>
+  <circle cx="591" cy="417" r="5" fill="#c9baff"/><circle cx="591" cy="417" r="16" fill="#b9a8ff" fill-opacity=".12"/>
+  <path d="M0 560c238-75 429-26 620 160H0z" fill="#0b1526" fill-opacity=".45"/>
+  <path d="M0 0h1280v720H0z" fill="url(#bg)" opacity=".06"/>
+</svg>

@@ -1,0 +1,45 @@
+import type { ReactNode } from 'react'
+import AdminGuard from '@/components/admin/AdminGuard'
+import AdminLogoutButton from '@/components/admin/AdminLogoutButton'
+import AdminNav from '@/components/admin/AdminNav'
+import MobileNav from '@/components/admin/MobileNav'
+import AdminPermGate from '@/components/admin/AdminPermGate'
+
+export default function AdminLayout({ children }: { children: ReactNode }) {
+  return (
+    <AdminGuard>
+      <div dir="rtl" className="min-h-screen bg-background text-foreground">
+        <header className="sticky top-0 z-30 flex min-h-16 items-center justify-between bg-transparent px-4 shadow-[0_4px_16px_rgba(17,17,17,0.05)] md:px-8">
+          <div className="flex items-center gap-3">
+            <MobileNav />
+            <span className="flex size-9 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+              س
+            </span>
+            <span className="font-display text-xl">سالِكس</span>
+          </div>
+
+          <details className="relative">
+            <summary className="flex cursor-pointer list-none items-center gap-2 rounded-full px-2 py-1 hover:bg-chip">
+              <span className="flex size-8 items-center justify-center rounded-full bg-secondary text-sm font-bold">م</span>
+              <span className="hidden text-sm sm:block">مشرف النظام</span>
+            </summary>
+            <div className="absolute left-0 top-11 min-w-44 rounded-2xl border border-border bg-card p-2 text-right shadow-soft">
+              <AdminLogoutButton />
+            </div>
+          </details>
+        </header>
+
+        <div className="flex">
+          <aside className="sticky top-16 hidden h-[calc(100vh-4rem)] w-72 shrink-0 self-start overflow-y-auto border-e border-border bg-sidebar p-4 lg:block">
+            <AdminNav />
+          </aside>
+          <main className="min-w-0 flex-1 px-4 py-6 md:px-8 md:py-10">
+            <div className="mx-auto max-w-6xl">
+              <AdminPermGate>{children}</AdminPermGate>
+            </div>
+          </main>
+        </div>
+      </div>
+    </AdminGuard>
+  )
+}
