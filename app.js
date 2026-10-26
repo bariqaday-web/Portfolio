@@ -76,7 +76,7 @@ const projects = [
     status: "غير منشور · نسخة خاصة",
     visual: "phone",
     image: "./assets/projects/silex-1.png",
-    video: "./assets/projects/silex-demo.mp4",
+    video: "./assets/projects/silex-demo.webm",
     gallery: [
       "./assets/projects/silex-1.png",
       "./assets/projects/silex-2.png",
@@ -102,7 +102,7 @@ function imageMarkup(project, modalView = false) {
 
 function videoMarkup(project) {
   const poster = project.image || "";
-  return `<div class="project-video-wrap"><video controls playsinline preload="metadata" poster="${poster}" onerror="this.classList.add('video-failed')"><source src="${project.video}" type="video/mp4" /></video><img class="video-fallback" src="${poster}" alt="معاينة واجهة ${project.title}" /></div>`;
+  return `<div class="project-video-wrap"><video controls playsinline preload="metadata" poster="${poster}" onerror="this.classList.add('video-failed')"><source src="${project.video}" type="video/webm" /></video><img class="video-fallback" src="${poster}" alt="معاينة واجهة ${project.title}" /></div>`;
 }
 
 function renderCounts() {
