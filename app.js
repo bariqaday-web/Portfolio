@@ -75,9 +75,10 @@ const projects = [
     tags: ["React Native", "Expo", "Arabic RTL"],
     status: "غير منشور · نسخة خاصة",
     visual: "phone",
-    image: "./assets/projects/silex-1.png",
+    image: "./assets/projects/silex-2.png",
     video: "./assets/projects/silex-demo.webm",
     videoMp4: "./assets/projects/silex-demo.mp4",
+    caseStudy: "./projects/silex/index.html",
     gallery: [
       "./assets/projects/silex-1.png",
       "./assets/projects/silex-2.png",
@@ -128,7 +129,7 @@ function renderProjects(filter = "all") {
         <div class="project-copy"><h3>${project.title}</h3><p>${project.shortTitle}</p><div class="card-tags">${project.tags.slice(0, 3).map((tag) => `<span>${tag}</span>`).join("")}</div></div>
         <div class="project-index">${String(projects.indexOf(project) + 1).padStart(2, "0")}</div>
       </div>
-      <div class="card-actions"><button class="card-detail" type="button">${project.link ? "التفاصيل" : "معرض الصور"}</button>${project.link ? `<a class="card-live" href="${project.link}" target="_blank" rel="noopener">فتح النسخة الحية ↗</a>` : ""}</div>
+      <div class="card-actions"><button class="card-detail" type="button">${project.link ? "التفاصيل" : "معرض الصور"}</button>${project.link ? `<a class="card-live" href="${project.link}" target="_blank" rel="noopener">فتح النسخة الحية ↗</a>` : project.caseStudy ? `<a class="card-live" href="${project.caseStudy}">عرض التطبيق والفيديو ↗</a>` : ""}</div>
     </article>
   `).join("");
 
@@ -181,9 +182,9 @@ function openModal(id) {
   document.querySelector("#modal-description").textContent = project.description;
   document.querySelector("#modal-tags").innerHTML = project.tags.map((tag) => `<span>${tag}</span>`).join("");
   const projectLink = document.querySelector("#modal-project-link");
-  projectLink.hidden = !project.link;
-  projectLink.href = project.link || "#";
-  projectLink.innerHTML = project.link ? "فتح النسخة الحية <span>↗</span>" : "";
+  projectLink.hidden = !(project.link || project.caseStudy);
+  projectLink.href = project.link || project.caseStudy || "#";
+  projectLink.innerHTML = project.link ? "فتح النسخة الحية <span>↗</span>" : project.caseStudy ? "عرض التطبيق والفيديو <span>↗</span>" : "";
 
   if (project.gallery) availableGallery(project).then((sources) => {
     if (!modal.classList.contains("open")) return;

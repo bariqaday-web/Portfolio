@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Silex / Salix — تطبيق جوال خاص</title>
+  <meta name="description" content="عرض مستقل لتطبيق Silex / Salix، أول تطبيق كامل بنيته استبرق باستخدام React Native وExpo.">
+  <style>
+    :root { --navy:#17233d; --ink:#25324d; --muted:#748096; --paper:#f7f8fb; --card:#fff; --line:#e4e8ef; --accent:#d6ef5a; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font-family:Arial,"Tahoma",sans-serif; line-height:1.7; }
+    a { color:inherit; }
+    .shell { width:min(1120px,calc(100% - 36px)); margin:auto; }
+    header { padding:24px 0; display:flex; justify-content:space-between; align-items:center; gap:18px; }
+    .brand { font-weight:800; color:var(--navy); letter-spacing:-.04em; }
+    .back { text-decoration:none; color:var(--muted); font-size:13px; }
+    .back:hover { color:var(--navy); }
+    .hero { display:grid; grid-template-columns:1.1fr .9fr; gap:36px; align-items:center; padding:54px 0 40px; }
+    .eyebrow { color:#798b2b; font-size:12px; font-weight:700; letter-spacing:.05em; }
+    h1 { font-size:clamp(34px,5vw,64px); line-height:1.05; letter-spacing:-.07em; margin:12px 0 18px; color:var(--navy); }
+    .lead { color:var(--muted); font-size:16px; max-width:620px; }
+    .chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:22px; }
+    .chip { padding:7px 12px; background:#eef3d8; border-radius:999px; color:#53651d; font-size:12px; }
+    .hero-card { background:var(--navy); border-radius:24px; padding:12px; box-shadow:20px 25px 0 rgba(214,239,90,.35); }
+    .hero-card img { display:block; width:100%; aspect-ratio:16/10; object-fit:cover; object-position:center; border-radius:15px; }
+    .section { padding:48px 0; }
+    .section h2 { font-size:28px; margin:0 0 8px; color:var(--navy); letter-spacing:-.05em; }
+    .section-intro { color:var(--muted); margin:0 0 22px; }
+    .video-box { background:#111827; border-radius:20px; padding:12px; box-shadow:0 18px 45px rgba(23,35,61,.16); }
+    video { width:100%; display:block; max-height:680px; border-radius:12px; background:#111827; }
+    .video-note { color:#cbd5e1; font-size:12px; padding:10px 4px 0; }
+    .gallery { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+    .gallery figure { margin:0; background:var(--card); padding:9px; border:1px solid var(--line); border-radius:16px; }
+    .gallery img { width:100%; display:block; border-radius:10px; aspect-ratio:16/9; object-fit:cover; object-position:top center; }
+    .gallery figure:first-child { grid-column:span 2; }
+    .gallery figcaption { font-size:12px; color:var(--muted); padding:8px 3px 2px; }
+    .facts { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .fact { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px; }
+    .fact b { display:block; color:var(--navy); margin-bottom:5px; }
+    .fact span { color:var(--muted); font-size:13px; }
+    footer { padding:35px 0 50px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
+    @media (max-width:800px) { .hero { grid-template-columns:1fr; padding-top:25px; } .hero-card { order:-1; } .gallery { grid-template-columns:1fr; } .gallery figure:first-child { grid-column:auto; } .facts { grid-template-columns:1fr; } header { align-items:flex-start; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand">برق اليوم · دراسة تطبيق</div>
+      <a class="back" href="../../index.html">العودة إلى البورتفوليو ←</a>
+    </header>
+    <main>
+      <section class="hero">
+        <div>
+          <div class="eyebrow">PRIVATE DEMO · REACT NATIVE + EXPO</div>
+          <h1>Silex / Salix</h1>
+          <p class="lead">أول تطبيق كامل بنيته بيدي: سوق اجتماعي عربي خاص يجمع اكتشاف المنتجات والمتاجر، الدردشة، القصص، المنشورات، الطلبات ومسارات التاجر ولوحة الإدارة. هذه نسخة تجريبية شغالة ومميزة، لم تُنشر بسبب عدم توفر موارد الدعم والتسويق، وتحتاج تطويرات لاحقة لتصبح منتجًا عامًا.</p>
+          <div class="chips"><span class="chip">React Native</span><span class="chip">Expo</span><span class="chip">Arabic RTL</span><span class="chip">Private demo</span></div>
+        </div>
+        <div class="hero-card"><img src="../../assets/projects/silex-2.png" alt="واجهة الدردشة في تطبيق Silex"></div>
+      </section>
+      <section class="section" aria-labelledby="video-title">
+        <h2 id="video-title">شاهد التطبيق أثناء التشغيل</h2>
+        <p class="section-intro">تسجيل شاشة يوضح أن المشروع يتجاوز تصميم الواجهات إلى تجربة تطبيق متحركة قابلة للاستخدام.</p>
+        <div class="video-box">
+          <video controls playsinline preload="metadata" poster="../../assets/projects/silex-2.png">
+            <source src="../../assets/projects/silex-demo.mp4" type="video/mp4">
+            <source src="../../assets/projects/silex-demo.webm" type="video/webm">
+            متصفحك لا يدعم تشغيل الفيديو. يمكنك مشاهدة الصور أدناه.
+          </video>
+          <div class="video-note">فيديو تجريبي خاص بالمشروع · لا توجد قاعدة بيانات أو خدمة خارجية مطلوبة لعرض هذه الصفحة.</div>
+        </div>
+      </section>
+      <section class="section" aria-labelledby="gallery-title">
+        <h2 id="gallery-title">لقطات من الواجهات</h2>
+        <p class="section-intro">مجموعة مختارة من تجربة المستخدم: الاستكشاف، المحادثات، الاتصال، لوحة التاجر وتحليل المنتجات.</p>
+        <div class="gallery">
+          <figure><img src="../../assets/projects/silex-1.png" alt="واجهة استكشاف المنتجات في Silex"><figcaption>استكشاف المنتجات والمتاجر</figcaption></figure>
+          <figure><img src="../../assets/projects/silex-2.png" alt="واجهة الدردشة في Silex"><figcaption>المحادثات والتواصل</figcaption></figure>
+          <figure><img src="../../assets/projects/silex-3.png" alt="واجهة الاتصال في Silex"><figcaption>الاتصال داخل التطبيق</figcaption></figure>
+          <figure><img src="../../assets/projects/silex-4.png" alt="لوحة تحكم التاجر في Silex"><figcaption>لوحة تحكم التاجر</figcaption></figure>
+          <figure><img src="../../assets/projects/silex-5.png" alt="تحليل المنتجات في Silex"><figcaption>تحليل المنتجات والمخزون</figcaption></figure>
+        </div>
+      </section>
+      <section class="section" aria-labelledby="facts-title">
+        <h2 id="facts-title">ما الذي يوضحه المشروع؟</h2>
+        <div class="facts">
+          <div class="fact"><b>تطبيق كامل</b><span>تجربة مترابطة تشمل واجهات المستخدم ومسارات التاجر ولوحة الإدارة.</span></div>
+          <div class="fact"><b>تجربة عربية</b><span>اتجاه RTL وواجهات مصممة لتكون واضحة ومريحة للمستخدم العربي.</span></div>
+          <div class="fact"><b>قابل للتطوير</b><span>نسخة خاصة شغالة تحتاج إلى تطويرات وموارد نشر وتسويق قبل إطلاقها للعامة.</span></div>
+        </div>
+      </section>
+    </main>
+    <footer>مشروع شخصي وتجريبي من برق اليوم · غير منشور للعامة حاليًا</footer>
+  </div>
+</body>
+</html>
