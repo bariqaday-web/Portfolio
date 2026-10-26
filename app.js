@@ -77,6 +77,7 @@ const projects = [
     visual: "phone",
     image: "./assets/projects/silex-1.png",
     video: "./assets/projects/silex-demo.webm",
+    videoMp4: "./assets/projects/silex-demo.mp4",
     gallery: [
       "./assets/projects/silex-1.png",
       "./assets/projects/silex-2.png",
@@ -100,9 +101,10 @@ function imageMarkup(project, modalView = false) {
   return `<div class="project-image-wrap"><img src="${project.image}" alt="معاينة واجهة ${project.title}" loading="${modalView ? "eager" : "lazy"}" onerror="this.classList.add('image-failed')" /><div class="image-fallback">${visualMarkup(project.visual)}</div></div>`;
 }
 
-function videoMarkup(project) {
+function videoMarkup(project, modalView = false) {
   const poster = project.image || "";
-  return `<div class="project-video-wrap"><video controls playsinline preload="metadata" poster="${poster}" onerror="this.classList.add('video-failed')"><source src="${project.video}" type="video/webm" /></video><img class="video-fallback" src="${poster}" alt="معاينة واجهة ${project.title}" /></div>`;
+  const playback = modalView ? "controls playsinline preload=\"metadata\"" : "autoplay muted loop controls playsinline preload=\"metadata\"";
+  return `<div class="project-video-wrap"><video ${playback} poster="${poster}" onerror="this.classList.add('video-failed')"><source src="${project.video}" type="video/webm" /><source src="${project.videoMp4}" type="video/mp4" /></video><img class="video-fallback" src="${poster}" alt="معاينة واجهة ${project.title}" /></div>`;
 }
 
 function renderCounts() {
@@ -143,7 +145,7 @@ function renderProjects(filter = "all") {
 }
 
 function modalVisual(project) {
-  return project.video ? videoMarkup(project) : project.image ? imageMarkup(project, true) : visualMarkup(project.visual);
+  return project.video ? videoMarkup(project, true) : project.image ? imageMarkup(project, true) : visualMarkup(project.visual);
 }
 
 function galleryMarkup(project, sources) {
@@ -186,7 +188,7 @@ function openModal(id) {
   if (project.gallery) availableGallery(project).then((sources) => {
     if (!modal.classList.contains("open")) return;
     if (sources.length) {
-      document.querySelector("#modal-visual").innerHTML = project.video ? `<div class="modal-media-stack">${videoMarkup(project)}${galleryMarkup(project, sources)}</div>` : galleryMarkup(project, sources);
+      document.querySelector("#modal-visual").innerHTML = project.video ? `<div class="modal-media-stack">${videoMarkup(project, true)}${galleryMarkup(project, sources)}</div>` : galleryMarkup(project, sources);
       bindGallery(project, sources);
     }
   });
