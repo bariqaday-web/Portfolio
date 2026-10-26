@@ -252,3 +252,9 @@ h2 { font-size: clamp(37px, 4vw, 58px); line-height: 1.07; letter-spacing: -.07e
   .card-actions { flex-wrap: wrap; }
   .card-actions button, .card-live { flex: 1; text-align: center; }
 }
+
+.image-fallback { display: none; width: 100%; height: 100%; align-items: center; justify-content: center; }
+.project-image-wrap img.image-failed { display: none; }
+.project-image-wrap:has(img.image-failed) .image-fallback { display: flex; }
+.project-image-wrap:has(img.image-failed) { background: #e7e4fa; }
+.project-image-wrap:has(img.image-failed) .phone-ui { transform: scale(.82); }
