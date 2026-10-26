@@ -208,3 +208,47 @@ h2 { font-size: clamp(37px, 4vw, 58px); line-height: 1.07; letter-spacing: -.07e
 .ride-ui > small { display: block; color: #8390a0; font-size: 6px; margin-top: 17px; } .ride-ui > strong { display: block; font-size: 15px; line-height: 1.2; margin-top: 3px; }
 .ride-map { height: 102px; border-radius: 10px; background: linear-gradient(145deg,#d8f0eb,#e9f1ff); position: relative; overflow: hidden; margin-top: 12px; } .ride-map:before,.ride-map:after { content: ""; position: absolute; border: 2px solid #76c9bd; border-radius: 50%; transform: rotate(-24deg); } .ride-map:before { width: 120px; height: 35px; top: 36px; right: 10px; } .ride-map:after { width: 170px; height: 60px; top: 18px; right: -7px; border-color: #a1bdf3; } .ride-map i { position: absolute; width: 11px; height: 11px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: #2f6fed; right: 42%; top: 42%; box-shadow: 0 0 0 4px #2f6fed22; } .ride-map i:last-child { right: 20%; top: 62%; width: 7px; height: 7px; background: #30b9a4; }
 .ride-trip { margin-top: 9px; display: grid; grid-template-columns: 1fr auto; gap: 1px 6px; padding: 9px; border-radius: 9px; background: #fff; border: 1px solid #dfe7ee; } .ride-trip b { font-size: 8px; } .ride-trip span { font-size: 5px; color: #758397; } .ride-trip em { grid-row: 1 / span 2; grid-column: 2; align-self: center; color: #2f6fed; font-size: 10px; font-style: normal; font-weight: 800; }
+
+/* Work cards refresh: same Barqfolio identity, clearer live project presentation */
+.project-card { padding: 10px; border: 1px solid rgba(16, 23, 40, .06); }
+.project-visual { height: auto; aspect-ratio: 16 / 10; background: var(--card); }
+.project-card:nth-child(3) .project-visual { height: auto; aspect-ratio: 16 / 10; }
+.project-visual.has-project-image { background: #e9edf1; }
+.project-image-wrap, .project-image-wrap img { width: 100%; height: 100%; display: block; }
+.project-image-wrap img { object-fit: cover; object-position: top center; transition: transform 320ms ease; }
+.project-card:hover .project-image-wrap img { transform: scale(1.025); }
+.project-image-wrap.image-missing { display: none; }
+.card-badges { position: absolute; inset: 12px 12px auto; display: flex; justify-content: space-between; align-items: center; gap: 8px; pointer-events: none; }
+.category-badge, .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 6px 9px; border-radius: 999px; background: rgba(255, 255, 255, .9); color: var(--ink); font-size: 9px; box-shadow: 0 7px 18px rgba(16, 23, 40, .09); backdrop-filter: blur(8px); }
+.status-badge { color: #27633d; }
+.status-badge.pending { color: #856414; }
+.status-badge i { width: 6px; height: 6px; border-radius: 50%; background: #42a864; }
+.status-badge.pending i { background: #d49b32; }
+.project-info { align-items: start; padding: 16px 6px 8px; }
+.project-copy { min-width: 0; }
+.project-info h3 { margin-bottom: 4px; }
+.project-info p { display: -webkit-box; line-clamp: 2; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.55; min-height: 34px; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; direction: rtl; }
+.card-tags span { color: var(--ink-soft); border: 1px solid var(--line); border-radius: 999px; padding: 4px 7px; font-size: 9px; line-height: 1; }
+.project-index { padding-top: 3px; }
+.card-actions { display: flex; gap: 7px; padding: 0 6px 5px; }
+.card-actions button, .card-live { border: 0; border-radius: 8px; padding: 9px 11px; font-size: 10px; cursor: pointer; transition: 180ms ease; }
+.card-detail { background: var(--paper); color: var(--ink); }
+.card-live { background: var(--ink); color: var(--lime); }
+.card-actions button:hover, .card-live:hover { transform: translateY(-2px); }
+.card-detail:hover { background: var(--lime); }
+.modal-visual > .project-image-wrap { width: 100%; height: 100%; }
+.modal-visual > .project-image-wrap img { object-fit: cover; object-position: top center; }
+.modal-gallery { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 12px; }
+.gallery-frame { width: min(620px, 92%); height: calc(100% - 35px); display: grid; place-items: center; overflow: hidden; border-radius: 10px; background: rgba(255,255,255,.55); }
+.gallery-frame img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.gallery-frame.image-missing::after { content: "أضيفي صور الشاشات داخل assets/projects"; color: var(--ink-soft); font-size: 12px; }
+.gallery-controls { display: flex; align-items: center; gap: 13px; color: var(--ink-soft); font-size: 11px; }
+.gallery-controls button { width: 27px; height: 27px; border: 0; border-radius: 50%; background: var(--ink); color: var(--lime); cursor: pointer; }
+.modal-project-link { cursor: pointer; }
+@media (max-width: 800px) {
+  .project-visual { aspect-ratio: 16 / 10; }
+  .project-card:nth-child(3) .project-visual { height: auto; }
+  .card-actions { flex-wrap: wrap; }
+  .card-actions button, .card-live { flex: 1; text-align: center; }
+}
