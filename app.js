@@ -66,21 +66,20 @@ const projects = [
     link: "https://bariqaday-web.github.io/NovaSync/"
   },
   {
-    id: "estabraq-app",
-    title: "تطبيق استبرق",
-    shortTitle: "تطبيق جوال شخصي — صور الواجهات",
-    description: "هذا قالب عرض لتطبيقك الجوال. ارفعي 3 أو 5 لقطات داخل assets/projects/ بالأسماء المحددة، وستظهر تلقائيًا في البطاقة ومعرض الصور دون الحاجة إلى تعديل الكود.",
+    id: "silex",
+    title: "Silex / Salix",
+    shortTitle: "أول تطبيق كامل بنيته بـ React Native وExpo",
+    description: "أول تطبيق كامل بنيته بيدي باستخدام React Native وExpo: سوق اجتماعي عربي خاص يجمع المنتجات والمتاجر والسلة والطلبات والمنشورات والقصص والمحادثات والإشعارات، مع مسارات للتاجر ولوحة إدارة. لم يُنشر لعدم توفر موارد الدعم والتسويق، لكنه نسخة تجريبية شغالة ومميزة وقابلة للتطوير.",
     category: "mobile",
     categoryLabel: "تطبيقات",
-    tags: ["Mobile UI", "React Native", "Expo"],
+    tags: ["React Native", "Expo", "Arabic RTL"],
+    status: "غير منشور · نسخة خاصة",
     visual: "phone",
-    image: "./assets/projects/estabraq-app-1.png",
+    image: "./assets/projects/silex-1.png",
     gallery: [
-      "./assets/projects/estabraq-app-1.png",
-      "./assets/projects/estabraq-app-2.png",
-      "./assets/projects/estabraq-app-3.png",
-      "./assets/projects/estabraq-app-4.png",
-      "./assets/projects/estabraq-app-5.png"
+      "./assets/projects/silex-1.png",
+      "./assets/projects/silex-2.png",
+      "./assets/projects/silex-3.png"
     ]
   }
 ];
@@ -113,7 +112,7 @@ function renderProjects(filter = "all") {
     <article class="project-card ${project.link ? "is-live" : "is-unpublished"}" data-id="${project.id}" tabindex="0" aria-label="فتح تفاصيل ${project.title}">
       <div class="project-visual ${project.image ? "has-project-image" : ""}">
         ${project.image ? imageMarkup(project) : visualMarkup(project.visual)}
-        <div class="card-badges"><span class="category-badge">${project.categoryLabel}</span><span class="status-badge ${project.link ? "live" : "pending"}"><i></i>${project.link ? "نسخة حية" : "قيد النشر"}</span></div>
+        <div class="card-badges"><span class="category-badge">${project.categoryLabel}</span><span class="status-badge ${project.link ? "live" : "pending"}"><i></i>${project.link ? "نسخة حية" : (project.status || "غير منشور")}</span></div>
       </div>
       <div class="project-info">
         <div class="project-copy"><h3>${project.title}</h3><p>${project.shortTitle}</p><div class="card-tags">${project.tags.slice(0, 3).map((tag) => `<span>${tag}</span>`).join("")}</div></div>
